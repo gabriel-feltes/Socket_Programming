@@ -1,0 +1,7 @@
+tcp/80 Open
+tcp/2000 Closed
+tcp/4000 Closed
+2000/udp Filtered
+23456/udp Filtered
+34567/udp Open
+ACK.NONAME.2981.2023-06-07,05:02:34
