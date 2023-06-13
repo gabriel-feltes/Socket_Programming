@@ -2,63 +2,63 @@ import socket
 import argparse
 from datetime import datetime
 
-def scan_tcp(ip, ports, output_file):
-    results = []
-    for port in ports:
+def scan_tcp(ip, portas, arquivo_saida):
+    resultados = []
+    for porta in portas:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(2)
-        result = sock.connect_ex((ip, port))
-        if result == 0:
-            results.append(f"tcp/{port} Open")
+        resultado = sock.connect_ex((ip, porta))
+        if resultado == 0:
+            resultados.append(f"tcp/{porta} Open")
         else:
-            results.append(f"tcp/{port} Closed")
+            resultados.append(f"tcp/{porta} Closed")
         sock.close()
 
-    if output_file:
-        with open(output_file, 'a') as file:
-            file.write('\n'.join(results))
-            file.write('\n')
+    if arquivo_saida:
+        with open(arquivo_saida, 'a') as arquivo:
+            arquivo.write('\n'.join(resultados))
+            arquivo.write('\n')
     else:
-        print('\n'.join(results))
+        print('\n'.join(resultados))
 
-def scan_udp(ip, ports, output_file):
-    results = []
-    for port in ports:
+def scan_udp(ip, portas, arquivo_saida):
+    resultados = []
+    for porta in portas:
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.settimeout(2)
-        payload = bytes('noname'.encode('utf-8'))
-        sock.sendto(payload, (ip, port))
+        carga = bytes('noname'.encode('utf-8'))
+        sock.sendto(carga, (ip, porta))
         try:
-            data, _ = sock.recvfrom(1024)
-            response = data.decode('utf-8').split('.')
-            if len(response) == 4 and response[0] == 'ACK' and response[1] == 'NONAME':
-                results.append(f"{port}/udp Open")
-                results.append('.'.join(response))
+            dados, _ = sock.recvfrom(1024)
+            resposta = dados.decode('utf-8').split('.')
+            if len(resposta) == 4 and resposta[0] == 'ACK' and resposta[1] == 'NONAME':
+                resultados.append(f"{porta}/udp Open")
+                resultados.append('.'.join(resposta))
             else:
-                results.append(f"{port}/udp Closed")
+                resultados.append(f"{porta}/udp Closed")
         except socket.timeout:
-            results.append(f"{port}/udp Filtered")
+            resultados.append(f"{porta}/udp Closed/Filtered")
         sock.close()
 
-    if output_file:
-        with open(output_file, 'a') as file:
-            file.write('\n'.join(results))
-            file.write('\n')
+    if arquivo_saida:
+        with open(arquivo_saida, 'a') as arquivo:
+            arquivo.write('\n'.join(resultados))
+            arquivo.write('\n')
     else:
-        print('\n'.join(results))
+        print('\n'.join(resultados))
 
 def main():
-    parser = argparse.ArgumentParser(description='Network Scanner')
-    parser.add_argument('protocol', choices=['tcp', 'udp'], help='Type of transport protocol (TCP or UDP)')
-    parser.add_argument('ip', help='IPv4 address of the target host')
-    parser.add_argument('ports', nargs='+', type=int, help='Ports to scan (separated by commas)')
-    parser.add_argument('--output', '-o', help='Output file')
+    parser = argparse.ArgumentParser(description='Scanner de Rede')
+    parser.add_argument('protocolo', choices=['tcp', 'udp'], help='Tipo de protocolo de transporte (TCP ou UDP)')
+    parser.add_argument('ip', help='Endereço IPv4 do host de destino')
+    parser.add_argument('portas', nargs='+', type=int, help='Portas a serem verificadas (separadas por vírgula)')
+    parser.add_argument('--saida', '-o', help='Arquivo de saída')
     args = parser.parse_args()
 
-    if args.protocol == 'tcp':
-        scan_tcp(args.ip, args.ports, args.output)
-    elif args.protocol == 'udp':
-        scan_udp(args.ip, args.ports, args.output)
+    if args.protocolo == 'tcp':
+        scan_tcp(args.ip, args.portas, args.saida)
+    elif args.protocolo == 'udp':
+        scan_udp(args.ip, args.portas, args.saida)
 
 if __name__ == '__main__':
     main()

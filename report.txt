@@ -4,4 +4,15 @@ tcp/4000 Closed
 2000/udp Filtered
 23456/udp Filtered
 34567/udp Open
-ACK.NONAME.2981.2023-06-07,05:02:34
+ACK.NONAME.13487.2023-06-08,22:26:49
+2000/udp Closed/Filtered
+23456/udp Closed/Filtered
+34567/udp Open
+ACK.NONAME.14664.2023-06-13,19:11:12
+2000/udp Closed/Filtered
+23456/udp Closed/Filtered
+34567/udp Open
+ACK.NONAME.1671.2023-06-13,19:34:52
+tcp/80 Open
+tcp/2000 Closed
+tcp/4000 Closed
