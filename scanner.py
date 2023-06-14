@@ -1,5 +1,6 @@
 import socket
 import argparse
+import requests
 from datetime import datetime
 
 def scan_tcp(ip, portas, arquivo_saida):
@@ -59,6 +60,17 @@ def main():
         scan_tcp(args.ip, args.portas, args.saida) # Executa a varredura TCP
     elif args.protocolo == 'udp':
         scan_udp(args.ip, args.portas, args.saida) # Executa a varredura UDP
+
+    # Obtém o endereço IP da máquina local
+    ip = socket.gethostbyname(socket.gethostname())
+    # Imprime o endereço IP
+    print("Endereço IP local:", ip)
+
+    # Faz uma solicitação HTTP a um serviço que retorna o IP público
+    response = requests.get("https://api.ipify.org?format=json")
+    public_ip = response.json()["ip"]
+    # Imprime o endereço IP público
+    print("Endereço IP público:", public_ip)
 
 if __name__ == '__main__':
     main()
